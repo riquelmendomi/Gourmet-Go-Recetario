@@ -1,37 +1,53 @@
-// Espera a que todo el HTML esté cargado antes de ejecutar el JS
-// (evita errores si el script se carga antes que el DOM)
 document.addEventListener("DOMContentLoaded", () => {
 
-  // Captura el input del buscador usando su ID
-  const searchInput = document.getElementById("searchInput");
+  /* MODAL DE RECETAS */
 
-  // Selecciona todas las tarjetas de recetas
+  const modal = document.getElementById("recipeModal");
+  const modalImg = document.getElementById("modalImg");
+  const modalTitle = document.getElementById("modalTitle");
+  const closeModal = document.querySelector(".close-modal");
+
+  document.querySelectorAll(".card-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".recipe-card");
+      const img = card.querySelector("img");
+      const title = card.querySelector("h5");
+
+      modalImg.src = img.src;
+      modalImg.alt = img.alt;
+      modalTitle.textContent = title.textContent;
+
+      modal.style.display = "flex";
+    });
+  });
+
+  closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  modal.addEventListener("click", e => {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+
+  /* BUSCADOR  */
+
+  const searchInput = document.getElementById("searchInput");
   const recipeCards = document.querySelectorAll(".recipe-card");
 
-  // Escucha cada vez que el usuario escribe o borra algo en el input (en el teclado)
   searchInput.addEventListener("keyup", () => {
-
-    // Obtiene el texto escrito y lo pasa a minúsculas
-    // (así no importa si escriben "Pollo" o "pollo")
     const searchText = searchInput.value.toLowerCase();
 
-    // Recorre todas las cards una por una
     recipeCards.forEach(card => {
-
-      // Obtiene el título de la receta (el h5) y lo pasa a minúsculas
       const title = card.querySelector("h5").textContent.toLowerCase();
 
-      // Compara si el texto escrito está dentro del título
       if (title.includes(searchText)) {
-
-        // Si coincide, muestra la card
         card.parentElement.style.display = "block";
-
       } else {
-
-        // Si NO coincide, oculta la card
         card.parentElement.style.display = "none";
       }
     });
   });
+
 });
